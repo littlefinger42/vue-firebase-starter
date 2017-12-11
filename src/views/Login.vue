@@ -24,24 +24,13 @@ const uiConfig = {
   // Opens IDP Providers sign-in flow in a popup
   signInFlow: 'popup',
   signInOptions: [
-    {
-      provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      scopes: [
-        'public_profile',
-        'email'
-        // 'user_likes',
-        // 'user_friends'
-      ]
-    },
-    {
-      provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      scopes: ['https://www.googleapis.com/auth/plus.login']
-    },
-    {
-      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      // Whether the display name should be displayed in Sign Up page.
-      requireDisplayName: true
-    }
+    // Leave the lines as is for the providers you want to offer your users.
+    // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+    // firebase.auth.GithubAuthProvider.PROVIDER_ID,
+    firebase.auth.EmailAuthProvider.PROVIDER_ID
+    // firebase.auth.PhoneAuthProvider.PROVIDER_ID
   ]
   // Terms of service url.
   // tosUrl: 'https://www.google.com'
