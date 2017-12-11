@@ -1,13 +1,46 @@
 <template>
   <div class="mapPage">
     <h1>Map</h1>
-    <br />
+    <div id="map" class="map"></div>
     <router-link to="/">back to home</router-link>
   </div>
 </template>
 <script>
+  export default {
+    name: 'MapPage',
+    data () {
+      return {
+        msg: 'null value'
+      }
+    },
+    mounted () {
+      this.$nextTick(function () {
+        initMap()
+      })
+    }
+  }
+
+  import ol from 'ol'
+
+  function initMap () {
+    var map = new ol.Map({
+      target: 'map',
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM()
+        })
+      ],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([37.41, 8.82]),
+        zoom: 4
+      })
+    })
+    console.log(map)
+  }
 </script>
 <style lang="sass">
-.aloha
-  text-align: center
+.map 
+  height: 400px;
+  width: 100%;
+
 </style>

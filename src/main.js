@@ -26,6 +26,10 @@ Vue.use(MuseUI)
 // firebase
 import './initFirebase'
 
+// openlayers
+// import ol from 'ol'
+// console.log(ol)
+
 Vue.config.productionTip = false
 
 // Sync the router with the vuex store. This registers `store.state.route`

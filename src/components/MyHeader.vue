@@ -8,6 +8,12 @@
       slot="right"
       to="map"
     />
+    <mu-flat-button
+      v-show="user"
+      label="Settings"
+      slot="right"
+      to="settings"
+    />
     <mu-raised-button
       v-show="!user"
       label="Login"

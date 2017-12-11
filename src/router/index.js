@@ -5,6 +5,7 @@ import store from '@/store'
 import Landing from '@/views/Landing'
 import Login from '@/views/Login'
 import Profile from '@/views/Profile'
+import SettingsPage from '@/views/Settings'
 import MapPage from '@/views/MapPage'
 import FourOhFour from '@/views/FourOhFour'
 
@@ -44,6 +45,7 @@ const router = new Router({
       meta: { requiresAuth: true }
     },
     { path: '/map', component: MapPage },
+    { path: '/settings', component: SettingsPage },
     { path: '*', component: FourOhFour }
   ]
 })
