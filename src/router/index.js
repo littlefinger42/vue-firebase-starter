@@ -5,7 +5,7 @@ import store from '@/store'
 import Landing from '@/views/Landing'
 import Login from '@/views/Login'
 import Profile from '@/views/Profile'
-import Aloha from '@/views/Aloha'
+import MapPage from '@/views/MapPage'
 import FourOhFour from '@/views/FourOhFour'
 
 Vue.use(Router)
@@ -43,7 +43,7 @@ const router = new Router({
       component: Profile,
       meta: { requiresAuth: true }
     },
-    { path: '/aloha', component: Aloha },
+    { path: '/map', component: MapPage },
     { path: '*', component: FourOhFour }
   ]
 })

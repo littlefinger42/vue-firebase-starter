@@ -1,6 +1,6 @@
 <template>
-  <div class="aloha">
-    <h1>Aloha~~~~~</h1>
+  <div class="mapPage">
+    <h1>Map</h1>
     <br />
     <router-link to="/">back to home</router-link>
   </div>

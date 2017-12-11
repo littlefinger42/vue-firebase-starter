@@ -4,9 +4,9 @@
     <router-link to="/" class="logo">Logo</router-link>
 
     <mu-flat-button
-      label="Aloha"
+      label="Map"
       slot="right"
-      to="aloha"
+      to="map"
     />
     <mu-raised-button
       v-show="!user"
