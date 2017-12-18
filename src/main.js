@@ -15,13 +15,10 @@ if (process.env.NODE_ENV === 'production') {
   require('./pwa')
 }
 
-// muse-ui
-// import '@muse-ui/styles/base.less'
-// TODO: import components separately before production
-import MuseUI from 'muse-ui'
-import 'muse-ui/dist/muse-ui.css'
-import './muse-ui-theme.less'
-Vue.use(MuseUI)
+// vuetify
+import Vuetify from 'vuetify'
+import('vuetify/dist/vuetify.min.css')
+Vue.use(Vuetify)
 
 // firebase
 import './initFirebase'
