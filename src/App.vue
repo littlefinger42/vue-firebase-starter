@@ -19,7 +19,7 @@
           <v-list-tile-action><v-icon>person</v-icon></v-list-tile-action>
           <v-list-tile-content><v-list-tile-title>Login</v-list-tile-title></v-list-tile-content>
         </v-list-tile>
-        <v-list-tile @click="" v-show="user" to="profile">
+        <v-list-tile @click="" v-show="user" to="profile" ref="userButton">
           <v-list-tile-action><v-icon>person</v-icon></v-list-tile-action>
           <v-list-tile-content><v-list-tile-title>Profile</v-list-tile-title></v-list-tile-content>
         </v-list-tile>
