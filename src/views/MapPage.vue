@@ -1,42 +1,41 @@
 <template>
-  <div class="mapPage">
-    <h1>Map</h1>
-    <div id="map" class="map"></div>
-    <router-link to="/">back to home</router-link>
-  </div>
+  <v-layout row wrap>
+
+    <v-flex xs12>
+        <h1 class="title">{{ msg }}</h1>
+    </v-flex>
+
+    <v-flex xs12>
+
+      <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true">
+        <vl-view :zoom="2" :center="[0, 0]" :rotation="0"></vl-view>
+
+        <vl-geoloc>
+          <template scope="ctx">
+            <vl-feature v-if="ctx.position" id="geoloc-feature">
+              <vl-geom-point :coordinates="ctx.position"></vl-geom-point>
+            </vl-feature>
+          </template>
+        </vl-geoloc>
+
+        <vl-layer-tile id="osm">
+          <vl-source-osm></vl-source-osm>
+        </vl-layer-tile>
+      </vl-map>
+
+    </v-flex>
+
+  </v-layout>
 </template>
 <script>
-  export default {
-    name: 'MapPage',
-    data () {
-      return {
-        msg: 'null value'
-      }
-    },
-    mounted () {
-      this.$nextTick(function () {
-        initMap()
-      })
+export default {
+  name: 'MapPage',
+  data () {
+    return {
+      msg: 'Map Page'
     }
   }
-
-  import ol from 'ol'
-
-  function initMap () {
-    var map = new ol.Map({
-      target: 'map',
-      layers: [
-        new ol.layer.Tile({
-          source: new ol.source.OSM()
-        })
-      ],
-      view: new ol.View({
-        center: ol.proj.fromLonLat([37.41, 8.82]),
-        zoom: 4
-      })
-    })
-    console.log(map)
-  }
+}
 </script>
 <style lang="sass">
 .map 

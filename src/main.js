@@ -24,8 +24,11 @@ Vue.use(Vuetify)
 import './initFirebase'
 
 // openlayers
-// import ol from 'ol'
-// console.log(ol)
+import VueLayers from 'vuelayers'
+// import VueLayers styles, needs css-loader
+import 'vuelayers/lib/style.css'
+// register all vl-* components
+Vue.use(VueLayers)
 
 Vue.config.productionTip = false
 
