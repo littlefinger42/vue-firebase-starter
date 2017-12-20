@@ -1,7 +1,9 @@
 <template>
-  <div class="hello">
-    <div id="firebaseui-auth-container" />
-  </div>
+  <v-layout row wrap>
+    <v-flex xs12>      
+      <div id="firebaseui-auth-container" />
+    </v-flex>
+  </v-layout>
 </template>
 <script>
 import { mapState } from 'vuex'
