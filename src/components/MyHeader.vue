@@ -9,7 +9,7 @@
       to="map"
     />
     <mu-flat-button
-      v-show="user"
+      v-show="!user"
       label="Settings"
       slot="right"
       to="settings"

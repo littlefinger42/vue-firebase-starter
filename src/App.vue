@@ -37,9 +37,7 @@
 
     <v-content>
       <v-container fluid fill-height>
-        <v-layout justify-center align-center>
           <router-view></router-view>
-        </v-layout>
       </v-container>
     </v-content>
     
@@ -77,10 +75,6 @@ export default {
 #app
 </style>
 <style scoped>
-.layout {
-  background-color: rgb(236, 236, 236);
-}
-
 .content {
   width: 90%;
   margin: 0 auto;
