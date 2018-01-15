@@ -24,7 +24,7 @@ export const ui = new firebaseui.auth.AuthUI(firebase.auth())
  * This callback is called when firebase.auth() detects user changes,
  * so just update the vuex store with the new user object.
  */
-firebase.auth().onAuthStateChanged(user => {
+firebase.auth().onAuthStateChanged(user => { //TODO: Make the call to the database after the cloud function has run
   if (user) { // If the user is logged on
     let fullUserData = user;
   
