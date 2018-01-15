@@ -8,7 +8,7 @@
     <v-flex xs12>
 
       <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true">
-        <vl-view :zoom="2" :center="[0, 0]" :rotation="0"></vl-view>
+        <vl-view :zoom="3" :center="[0, 0]" :rotation="0"></vl-view>
 
         <vl-geoloc>
           <template scope="ctx">
