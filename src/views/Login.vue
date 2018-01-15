@@ -58,6 +58,4 @@ export default {
 }
 </script>
 <style lang="sass">
-.hello
-  text-align: center
 </style>

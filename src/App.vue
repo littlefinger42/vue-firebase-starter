@@ -52,8 +52,6 @@ import { mapState } from 'vuex'
 
 export default {
   data: () => ({
-    userMenuOpen: false,
-    userMenuTrigger: null,
     drawer: null
   }),
   computed: {
