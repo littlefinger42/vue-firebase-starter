@@ -1,15 +1,8 @@
-<h1 align="center">vue-firebase-starter</h1>
+<h1 align="center">Map App</h1>
 
 <p align="center">
-  <a href="https://github.com/feross/standard">
-    <img src="https://cdn.rawgit.com/feross/standard/master/badge.svg" alt="Standard - JavaScript Style Guide">
-  </a>
+Progressive Web App (PWA) using vue/vuex/vue(x)-router/offline-plugin, with sass, prerendering, vuetify, and firebase/firebaseui! Uses OpenLayers 3 for the map and reads/writes data with firebase storage.
 </p>
-
-<p align="center">
-Progressive Web App (PWA) starter-kit using vue/vuex/vue(x)-router/offline-plugin, with sass, prerendering, muse-ui, and firebase/firebaseui!
-</p>
-
 
 
 ## Features
@@ -22,14 +15,10 @@ Everything in `vue-cli:webpack` (hot reloading/vue file/webpack2/eslint/postcss+
 - firebase
 - vuexfire
 - firebaseui
-- muse-ui
+- vuetify
 - Offline Ready, Progressive Web App (PWA)
 - prerendering for better SEO
 <!--TODO - tracking library with offline support-->
-
-
-## [Online Demo](https://vue-firebase-starter.netlify.com/)
-
 
 ## Build Commands
 
@@ -98,13 +87,6 @@ You can rename the `views` to `containers` if you prefer : )
 
 ## Development
 
-### Muse-UI Theme
-
-Muse-UI currently only support theme settings using less.
-Check out [the docs](http://www.muse-ui.org/#/theme) and change variables in [this file `src/muse-ui-theme.less`](https://github.com/DaxChen/vue-firebase-starter/blob/master/src/muse-ui-theme.less).
-
-You can use [the color palette from material design colors](https://material.io/guidelines/style/color.html), watch the video to learn how to choose them.
-
 ### Webpack Settings
 
 #### Globals Variables
@@ -162,51 +144,3 @@ Because prerender will generate rendered DOM into html, and vue needs to be able
 I recommend http://realfavicongenerator.net/, the best favicon generator I've used!
 
 Just follow the instruction and put the extracted files in the `static/` folder, and override the `<head></head>` section in `index.html`.
-
-### Netlify
-
-I highly recommend you try out [Netlify](https://www.netlify.com/) if you haven't!
-
-Just signup, choose your `GitHub/GitLab/BitBucket` account and repo, put in two settings:
-
-- build command: `yarn build`
-- Publish directory: `dist`
-
-And you're all set! Every time you push to the chosen branch, you're site rebuilds and deploys automatically!
-
-#### _redirects
-
-To use Netlify with vue-router (or any other SPA), we need to setup a `_redirects` file in the root of the published directory (NOT the root of project).
-
-This is already done for you, check out `statics/_redirects`.
-
-<!--## Muse-ui
-Components are loaded separately to minimize the bundle size,
-therefore, you'll need to import component and register them one by one when using.
-
-To import a component, there is a webpack alias `@muse-ui` which points to `muse-ui/src`.
-So take the header component for example
-(see `src/components/MyHeader.vue` for full source):
-You'll need to import every muse-ui components that you want to use,
-and register them in the components section:
-
-```js
-import MuAppbar from '@muse-ui/appBar'
-import MuFlatButton from '@muse-ui/flatButton'
-import MuIconMenu from '@muse-ui/iconMenu'
-import { menuItem as MuMenuItem } from '@muse-ui/menu'
-
-export default {
-  components: {
-    MuAppbar,
-    MuFlatButton,
-    MuIconMenu,
-    MuMenuItem
-  }
-}
-```
-
-Note:
-1. In order to use `<mu-flat-button />` in html, I use the name `MuFlatButton`
-to register, because [vue converts camelCase in js to kebab-case in html](https://vuejs.org/v2/guide/components.html#camelCase-vs-kebab-case)
-2. As you can see in the import section, the path starts with `@muse-ui` instead of just `muse-ui`, as mentioned earlier. But how do I know what the name is for each component? Well, [they're all in the `muse-ui/src` folder](https://github.com/museui/muse-ui/tree/master/src), so you have to find them in there by yourself... (see how `menuItem`'s location is so hidden...)-->
