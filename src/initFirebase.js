@@ -29,7 +29,7 @@ firebase.auth().onAuthStateChanged(user => { //TODO: Make the call to the databa
     let fullUserData = user;
   
     // Connect to the database to grab more user data if available
-    firebase.database().ref('users/' + user.uid + '/').once('value').then(function(snapshot) {
+    firebase.database().ref('users/' + user.uid + '/user/').once('value').then(function(snapshot) {
       const userData = snapshot.val()
   
       if (userData !== null) {

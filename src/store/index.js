@@ -15,7 +15,7 @@ const store = new Vuex.Store({
       state.user = user
     },
     UPDATE_USER_GROUP (state, groupData) {
-      state.user.data.group = groupData
+      state.user.data.groupData = groupData
     },
     ...firebaseMutations
   },

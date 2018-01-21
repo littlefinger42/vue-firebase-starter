@@ -18,6 +18,10 @@
           </template>
         </vl-geoloc>
 
+          <vl-feature v-for="groupMember in groupLocations">
+            <vl-geom-point :coordinates="groupMember.location"></vl-geom-point>
+          </vl-feature>
+
         <vl-layer-tile id="osm">
           <vl-source-osm></vl-source-osm>
         </vl-layer-tile>
@@ -43,7 +47,7 @@ const methods = {
       const userId = this.user.uid
       console.log('userid from map page', userId)
       const time = Date.now();
-      firebase.database().ref('users/' + userId + '/location/').push({ coordinates: coordinate, time: time }).then(function() {
+      firebase.database().ref('users/' + userId + '/location/').update({ [time]: {coordinates: coordinate}}).then(function() {
         console.log('Written coordinate data to database: ', coordinate, time)
       })
     } else {
@@ -58,6 +62,19 @@ const methods = {
   },
   recieveGroupData (currentGroup) {
     // Make call to cloud function which returns array of group position data
+    var xhr = new XMLHttpRequest();
+    var endpoint = 'https://us-central1-testmap-49b0a.cloudfunctions.net/groupmembers'
+    xhr.addEventListener('load', requestListener)
+
+    xhr.open('GET', endpoint + '?groupId=' + currentGroup, true)
+    xhr.send()
+
+    function requestListener() {
+      console.log('requestresponse: ', this.response)
+      // for (var i = 0; i < response.length; i++) {
+
+      // }
+    }
   }
 }
 
@@ -74,15 +91,18 @@ export default {
       deviceCoordinate: undefined,
       mapZoom: 8,
       mapCentre: [0, 0],
-      mapRotation: 0
+      mapRotation: 0,
+      groupLocations: [
+        { name: 'Jean', location: ['5.48', '51.43']}, 
+        { name: 'Laurie', location: ['5.58', '50.43']}, 
+        { name: 'Taisei', location: ['6.48', '52.43']}, 
+        { name: 'Louis', location: ['5.48', '51.73']}, 
+        { name: 'Bonnaire', location: ['5.90', '51.43']}
+      ]
     }
   },
-  watch: {
-    user (val) {
-      if (val.groupData.current_group !== "") {
-        this.recieveGroupData(val.groupData.current_group)
-      }
-    }
+  mounted() {
+    this.recieveGroupData(this.user.data.groupData.current_group)
   }
 }
 </script>

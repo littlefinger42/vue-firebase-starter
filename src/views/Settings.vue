@@ -4,8 +4,24 @@
       <h1 class="title">{{ msg }}</h1>
   </v-flex>
 
+  <v-flex xs12>
+    <v-card class="mx-1">
+      <v-card-title primary class="title">User Settings</v-card-title>
+      <v-alert v-if="userSettingsStatus === 'success'"color="success" icon="check_circle" value="true">
+        {{userSettingsStatusText}}
+      </v-alert>
+      <v-card-text>
+        Here you can control settings specific to your user account.
+      </v-card-text>
+      <v-card-actions>
+        <v-text-field name="Map Icon Colour (#HEX)" label="Map Icon Colour (#HEX)" id="mapIconColour" v-model="mapIconColour"></v-text-field>
+        <v-btn flat color="primary" id="mapIconColourBtn" v-on:click="setMapIconColour(mapIconColour, '#fff')">Set</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-flex>
+
   <v-flex xs12 sm6>
-    <v-card>
+    <v-card class="mx-1">
       <v-card-title primary class="title">Created Group Settings</v-card-title>
       <v-alert v-if="createGroupStatus === 'warning'" color="error" icon="warning" value="true">
         {{createGroupStatusText}}
@@ -14,7 +30,7 @@
         {{createGroupStatusText}}
       </v-alert>
       <v-card-text>
-        Created group: {{user.data.group.created_group}}
+        Created group: {{user.data.groupData.created_group}}
       </v-card-text>
       <v-card-text
         v-text="createGroupText">
@@ -27,7 +43,7 @@
   </v-flex>
 
   <v-flex xs12 sm6>
-    <v-card>
+    <v-card class="mx-1">
       <v-card-title primary class="title">Join a group</v-card-title>
       <v-alert v-if="joinGroupStatus === 'warning'" color="error" icon="warning" value="true">
         {{joinGroupStatusText}}
@@ -35,8 +51,11 @@
       <v-alert v-if="joinGroupStatus === 'success'"color="success" icon="check_circle" value="true">
         {{joinGroupStatusText}}
       </v-alert>
+      <v-alert v-if="joinGroupStatus === 'info'"color="info" icon="info" value="true">
+        {{joinGroupStatusText}}
+      </v-alert>
       <v-card-text>
-        Current group: {{user.data.group.current_group}}
+        Current group: {{user.data.groupData.current_group}}
       </v-card-text>
       <v-card-text
         v-text="joinGroupText">
@@ -62,13 +81,16 @@ export default {
     return {
       msg: 'Settings Page',
       createGroupText: 'You can only have one group at a time. Creating a new group will discard your last created one.',
-      createGroupName: '',
-      createGroupStatus: '',
-      createGroupStatusText: '',
+      createGroupName: undefined,
+      createGroupStatus: undefined,
+      createGroupStatusText: undefined,
       joinGroupText: 'Enter group name to join your friends group. Note you can only be part of one group at a time.',
-      joinGroupName:'',
-      joinGroupStatus: '',
-      joinGroupStatusText: ''
+      joinGroupName: undefined,
+      joinGroupStatus: undefined,
+      joinGroupStatusText: undefined,
+      mapIconColour: undefined,
+      userSettingsStatus: undefined,
+      userSettingsStatusText: undefined
     }
   },
   mounted() {
@@ -78,6 +100,18 @@ export default {
     ...mapState(['user']),
   },
   methods: {
+    setMapIconColour: function(mapIconColour) {
+      let self = this;
+      let user = this.user
+      const userUid = user.uid
+
+      firebase.database().ref('users/' + userUid + '/user/userData/').update({
+        "map_icon_colour": mapIconColour
+      }).then(function() {
+          self.userSettingsStatus = 'success'
+          self.userSettingsStatusText = 'Map icon colour set to ' + mapIconColour
+      })
+    },
     createGroup: function(groupId) {
       let self = this;
       let user = this.user
@@ -93,15 +127,15 @@ export default {
       })
 
     function doCreateGroup() {
-      firebase.database().ref('users/' + userUid + '/group').set({
+      firebase.database().ref('users/' + userUid + '/user/groupData/').set({
         created_group: groupId,
         current_group: groupId
       }).then(function(){
         self.createGroupStatus = 'success'
         self.createGroupStatusText = 'Group Created'
-        user.data.group.created_group = groupId
-        user.data.group.current_group = groupId
-        store.commit('UPDATE_USER_GROUP', user.data.group)
+        user.data.groupData.created_group = groupId
+        user.data.groupData.current_group = groupId
+        store.commit('UPDATE_USER_GROUP', user.data.groupData)
       })
     }
 
@@ -111,23 +145,28 @@ export default {
       const user = this.user
       const userUid = user.uid
 
-      firebase.database().ref('groups/' + groupId).once('value').then(function(snapshot) {
-        if (snapshot.val() === null) {
-          self.joinGroupStatus = 'warning'
-          self.joinGroupStatusText = 'This group doesnt exist.'
-        } else {
-          doJoinGroup()
-        }
-      })
-
+      if (groupId !== user.data.groupData.current_group) {
+        firebase.database().ref('groups/' + groupId).once('value').then(function(snapshot) {
+          if (snapshot.val() === null) {
+            self.joinGroupStatus = 'warning'
+            self.joinGroupStatusText = 'This group doesnt exist.'
+          } else {
+            doJoinGroup()
+          }
+        })
+      } else {
+        self.joinGroupStatus = 'info'
+        self.joinGroupStatusText = 'You are already a member of this group'
+      }
+      
       function doJoinGroup() {
-        firebase.database().ref('users/' + userUid + '/group/').update({
+        firebase.database().ref('users/' + userUid + '/user/groupData/').update({
           current_group: groupId
         }).then(function() {
           self.joinGroupStatus = 'success'
           self.joinGroupStatusText = 'Group Joined'
-          user.data.group.current_group = groupId
-          store.commit('UPDATE_USER_GROUP', user.data.group)
+          user.data.groupData.current_group = groupId
+          store.commit('UPDATE_USER_GROUP', user.data.groupData)
         })
       }
     }
