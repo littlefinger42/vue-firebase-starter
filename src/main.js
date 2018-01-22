@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // vuetify
 import Vuetify from 'vuetify'
-import('vuetify/dist/vuetify.min.css')
+import 'vuetify/dist/vuetify.min.css'
 Vue.use(Vuetify)
 
 // firebase
