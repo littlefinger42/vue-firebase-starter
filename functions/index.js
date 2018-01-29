@@ -58,24 +58,27 @@ exports.groupmembers = functions.https.onRequest((req, res) => {
 
 				admin.database().ref('groups/' + groupId + '/members/').once('value').then(function(snapshot) {
 					const memberList = snapshot.val()
+					console.log(memberList)
 					let memberLocations = []
 					var promises = []
 						
 					for (var member in memberList) {
-						if (memberList.hasOwnProperty(member)) {
+						const memberId = member
+
+						if (memberList.hasOwnProperty(memberId)) {
 							try { 
-								var promise = admin.database().ref('users/' + member + '/location/').limitToLast(1).once('value').then(function(snapshot) {
+								let promise = admin.database().ref('users/' + memberId + '/location/').limitToLast(1).once('value').then(function(snapshot) {
 									let location = snapshot.val()
-									location.userId = member
+									location.userId = memberId
 									memberLocations.push(location)
 								})
 								promises.push(promise);
 							} catch(error) {
 								console.log(error)
 							}
-							
 						}
 					}
+
 					Promise.all(promises).then(function() {
 						res.status(200).send(memberLocations)
 					})
