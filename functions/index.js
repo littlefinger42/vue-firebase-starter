@@ -55,6 +55,7 @@ exports.groupmembers = functions.https.onRequest((req, res) => {
 		cors(req, res, () => {
 			if (req.query.groupId) {
 				const groupId = req.query.groupId
+				const userId = req.query.userId
 
 				admin.database().ref('groups/' + groupId + '/members/').once('value').then(function(snapshot) {
 					const memberList = snapshot.val()
@@ -65,7 +66,7 @@ exports.groupmembers = functions.https.onRequest((req, res) => {
 					for (var member in memberList) {
 						const memberId = member
 
-						if (memberList.hasOwnProperty(memberId)) {
+						if (userId !== member && memberList.hasOwnProperty(memberId)) {
 							try { 
 								let promise = admin.database().ref('users/' + memberId + '/location/').limitToLast(1).once('value').then(function(snapshot) {
 									let location = snapshot.val()

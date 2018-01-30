@@ -5,6 +5,7 @@ import 'es6-promise/auto'
 import 'weakmap' // for vuexfire, using (imports-loader)
 
 import Vue from 'vue'
+import Vuetify from 'vuetify' 
 import App from './App'
 import store from './store'
 import router from './router'
@@ -16,7 +17,6 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // vuetify
-import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 Vue.use(Vuetify)
 
