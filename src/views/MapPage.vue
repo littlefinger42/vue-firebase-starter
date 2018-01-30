@@ -66,7 +66,7 @@ const methods = {
     let self = this
     // Make call to cloud function which returns array of group position data
     var xhr = new XMLHttpRequest()
-    var endpoint = 'https://us-central1-testmap-49b0a.cloudfunctions.net/groupmembers'
+    var endpoint = 'https://us-central1-testmap-49b0a.cloudfunctions.net/grouplocation'
     xhr.addEventListener('load', requestListener)
 
     xhr.open('GET', endpoint + '?groupId=' + currentGroup + '&userId=' + this.user.uid, true)

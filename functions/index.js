@@ -47,7 +47,7 @@ exports.createJoinGroup = functions.database.ref('/users/{userID}/user/groupData
 
 //===== Endpoints
 
-exports.groupmembers = functions.https.onRequest((req, res) => {
+exports.grouplocation = functions.https.onRequest((req, res) => {
 		if (req.method === 'PUT') {
 			res.status(403).send('Forbidden!');
 		}
