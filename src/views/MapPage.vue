@@ -6,14 +6,18 @@
     </v-flex>
 
     <v-flex xs12>
-
+      <v-alert v-if="partOfGroup === false"color="warning" icon="check_circle" value="true">
+        <p>
+          You're not part of a group yet. Go to <a href="/settings">settings</a>.
+        </p>
+      </v-alert>
       <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true">
         <vl-view :zoom="mapZoom" :center="mapCentre" :rotation="mapRotation"></vl-view>
 
         <vl-geoloc @update:position="onUpdatePosition">
-          <template scope="ctx">
-            <vl-feature v-if="ctx.position" id="geoloc-feature">
-              <vl-geom-point :coordinates="ctx.position"></vl-geom-point>
+          <template scope="geoloc">
+            <vl-feature v-if="geoloc.position" id="geoloc-feature">
+              <vl-geom-point :coordinates="geoloc.position"></vl-geom-point>
             </vl-feature>
           </template>
         </vl-geoloc>
@@ -106,6 +110,7 @@ export default {
     return {
       msg: 'Map Page',
       deviceCoordinate: undefined,
+      partOfGroup: true,
       mapZoom: 8,
       mapCentre: [0, 0],
       mapRotation: 0,
@@ -118,8 +123,12 @@ export default {
       ]
     }
   },
-  mounted() {
-    this.recieveGroupData(this.user.data.groupData.current_group)
+  mounted () {
+    if (this.user.data.groupData.current_group !== '') {
+      this.recieveGroupData(this.user.data.groupData.current_group)
+    } else {
+      this.partOfGroup = false
+    }
   }
 }
 </script>
