@@ -6,7 +6,7 @@
     <v-flex xs12>
       <v-alert v-if="partOfGroup === false"color="warning" icon="check_circle" value="true">
         <p>
-          You're not part of a group yet. Go to <a href="/settings">settings</a>.
+          You're not part of a group yet. Go to <a href="/settings">settings</a>. <!-- TODO: Fix this link -->
         </p>
       </v-alert>
       <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true">
