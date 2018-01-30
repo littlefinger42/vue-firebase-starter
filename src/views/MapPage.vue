@@ -1,9 +1,7 @@
 <template>
   <v-layout row wrap>
 
-    <v-flex xs12>
-        <h1 class="title">{{ msg }}</h1>
-    </v-flex>
+    <h1 class="title">{{ msg }}</h1>
 
     <v-flex xs12>
       <v-alert v-if="partOfGroup === false"color="warning" icon="check_circle" value="true">
@@ -134,7 +132,6 @@ export default {
 </script>
 <style lang="sass">
 .map 
-  height: 400px;
+  height: auto;
   width: 100%;
-
 </style>
