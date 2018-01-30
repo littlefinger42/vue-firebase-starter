@@ -61,19 +61,36 @@ const methods = {
     })
   },
   recieveGroupData (currentGroup) {
+    this.groupLocations = []
+
+    let self = this
     // Make call to cloud function which returns array of group position data
-    var xhr = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest()
     var endpoint = 'https://us-central1-testmap-49b0a.cloudfunctions.net/groupmembers'
     xhr.addEventListener('load', requestListener)
 
-    xhr.open('GET', endpoint + '?groupId=' + currentGroup, true)
+    xhr.open('GET', endpoint + '?groupId=' + currentGroup + '&userId=' + this.user.uid, true)
     xhr.send()
 
     function requestListener() {
-      console.log('requestresponse: ', this.response)
-      // for (var i = 0; i < response.length; i++) {
+      const groupData = JSON.parse(this.response)
 
-      // }
+      for (var i=0; i < groupData.length; i++) {
+        const memberData = groupData[i]
+        let memberId
+        let memberLocation
+
+        for (var property in memberData) {
+          if (property === 'userId') {
+             memberId = memberData.userId
+          } else {
+             memberLocation = memberData[property].coordinates
+          }
+
+        }
+        self.groupLocations.push({name: memberId,location: memberLocation})
+        console.log('groupLocations ', self.groupLocations)
+      }
     }
   }
 }
