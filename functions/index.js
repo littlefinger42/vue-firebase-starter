@@ -9,6 +9,7 @@ exports.fillUserData = functions.auth.user().onCreate(event => {
 		current_group: ''
 	}
 	let userData = event.data
+	userData.tracking = true
 	// userData.map_icon_colour = '#ff0000'
 	admin.database().ref('/users/' + event.data.uid + '/').set({
 		user: {userData, groupData},

@@ -12,7 +12,7 @@
       <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true">
         <vl-view :zoom="mapZoom" :center="mapCentre" :rotation="mapRotation"></vl-view>
 
-        <vl-geoloc @update:position="onUpdatePosition">
+        <vl-geoloc @update:position="onUpdatePosition" v-if="tracking">
           <template scope="geoloc">
             <vl-feature v-if="geoloc.position" id="geoloc-feature">
               <vl-geom-point :coordinates="geoloc.position"></vl-geom-point>
@@ -112,6 +112,7 @@ export default {
       mapZoom: 8,
       mapCentre: [0, 0],
       mapRotation: 0,
+      tracking: this.user.data.userData.tracking,
       groupLocations: [
         { name: 'Jean', location: ['5.48', '51.43']}, 
         { name: 'Laurie', location: ['5.58', '50.43']}, 
