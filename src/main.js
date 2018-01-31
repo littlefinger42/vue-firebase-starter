@@ -23,12 +23,15 @@ Vue.use(Vuetify)
 // firebase
 import './initFirebase'
 
-// openlayers
-import VueLayers from 'vuelayers'
-// import VueLayers styles, needs css-loader
+// vuelayers
+import {Map, Feature, PointGeom, OsmSource, Geoloc, TileLayer} from 'vuelayers'
 import 'vuelayers/lib/style.css'
-// register all vl-* components
-Vue.use(VueLayers)
+Vue.use(Map)
+Vue.use(Feature)
+Vue.use(PointGeom)
+Vue.use(OsmSource)
+Vue.use(TileLayer)
+Vue.use(Geoloc)
 
 Vue.config.productionTip = false
 
