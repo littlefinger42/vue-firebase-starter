@@ -63,37 +63,15 @@ const methods = {
     })
   },
   recieveGroupData (currentGroup) {
-    this.groupLocations = []
-
-    let self = this
-    // Make call to cloud function which returns array of group position data
-    var xhr = new XMLHttpRequest()
-    var endpoint = 'https://us-central1-testmap-49b0a.cloudfunctions.net/grouplocation'
-    xhr.addEventListener('load', requestListener)
-
-    xhr.open('GET', endpoint + '?groupId=' + currentGroup + '&userId=' + this.user.uid, true)
-    xhr.send()
-
-    function requestListener() {
-      const groupData = JSON.parse(this.response)
-
-      for (var i=0; i < groupData.length; i++) {
-        const memberData = groupData[i]
-        let memberId
-        let memberLocation
-
-        for (var property in memberData) {
-          if (property === 'userId') {
-             memberId = memberData.userId
-          } else {
-             memberLocation = memberData[property].coordinates
-          }
-
-        }
-        self.groupLocations.push({name: memberId,location: memberLocation})
-        console.log('groupLocations ', self.groupLocations)
+   firebase.database().ref('groups/' + currentGroup + '/members/').once('value').then(function(snapshot) {
+      const memberList = snapshot.val()
+      for(var i = 0; i<memberList.length;i++) {
+        firebase.database().ref('users/' + memberId + '/location/').on("child_added", function(snapshot) {
+          console.log(snapshot.val())
+          console.log('hey')
+        })
       }
-    }
+   })
   }
 }
 
