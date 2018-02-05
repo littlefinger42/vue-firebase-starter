@@ -13,14 +13,14 @@
         <vl-view :zoom="mapZoom" :center="mapCentre" :rotation="mapRotation"></vl-view>
 
         <vl-geoloc @update:position="onUpdatePosition">
-          <template scope="geoloc">
+          <template slot-scope="geoloc">
             <vl-feature v-if="geoloc.position" id="geoloc-feature">
               <vl-geom-point :coordinates="geoloc.position"></vl-geom-point>
             </vl-feature>
           </template>
         </vl-geoloc>
 
-          <vl-feature v-for="groupMember in groupLocations">
+          <vl-feature v-for="groupMember in groupLocations" :key="groupMember.name">
             <vl-geom-point :coordinates="groupMember.location"></vl-geom-point>
           </vl-feature>
 
@@ -63,15 +63,26 @@ const methods = {
     })
   },
   recieveGroupData (currentGroup) {
+    console.log('start recieving data')
    firebase.database().ref('groups/' + currentGroup + '/members/').once('value').then(function(snapshot) {
+
       const memberList = snapshot.val()
-      for(var i = 0; i<memberList.length;i++) {
-        firebase.database().ref('users/' + memberId + '/location/').on("child_added", function(snapshot) {
+      console.log(memberList)
+      for(var member in memberList) {
+        console.log(member)
+        firebase.database().ref('users/' + member + '/location/').limitToLast(1).on("child_added", function(snapshot) {
           console.log(snapshot.val())
+          //coordinates = snapshot.val
           console.log('hey')
         })
       }
    })
+
+   function recieveGroupUserData(userId) {
+      firebase.database().ref('users/' + userId + '/userData/public').once('value').then(function(snapshot) { 
+
+      })
+   }
   }
 }
 
@@ -101,6 +112,7 @@ export default {
   },
   mounted () {
     if (this.user.data.groupData.current_group !== '') {
+
       this.recieveGroupData(this.user.data.groupData.current_group)
     } else {
       this.partOfGroup = false
