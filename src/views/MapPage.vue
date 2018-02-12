@@ -45,11 +45,12 @@ const methods = {
     this.writePositionData(coordinate)
   },
   writePositionData (coordinate) {
-    if (this.user) {
+    if (this.user && this.user.data.groupData.current_group) {
       const userId = this.user.uid
-      console.log('userid from map page', userId)
+      const groupId = this.user.data.groupData.current_group
       const time = Date.now();
-      firebase.database().ref('users/' + userId + '/location/').update({ [time]: {coordinates: coordinate}}).then(function() {
+
+      firebase.database().ref('locations/' + groupId + '/' + userId).set({coordinates: coordinate, time: [time]}).then(function() {
         console.log('Written coordinate data to database: ', coordinate, time)
       })
     } else {
@@ -63,26 +64,32 @@ const methods = {
     })
   },
   recieveGroupData (currentGroup) {
-    console.log('start recieving data')
-   firebase.database().ref('groups/' + currentGroup + '/members/').once('value').then(function(snapshot) {
+    let self = this
+    firebase.database().ref('locations/' + currentGroup).on("child_changed", function(snapshot) {
+      var response = snapshot.val()
+      var memberId = snapshot.key
+      var memberCoordinates = response.coordinates
+      const groupLocations = self.groupLocations
+      console.log('Recieved data: ' + memberId, memberCoordinates, 'Current Group Length: ' + groupLocations.length)
 
-      const memberList = snapshot.val()
-      console.log(memberList)
-      for(var member in memberList) {
-        console.log(member)
-        firebase.database().ref('users/' + member + '/location/').limitToLast(1).on("child_added", function(snapshot) {
-          console.log(snapshot.val())
-          //coordinates = snapshot.val
-          console.log('hey')
-        })
+      if (!updateMember(memberId, memberCoordinates)) { // If member doesn't exist, create a new one
+        self.groupLocations.push({name: memberId, location: memberCoordinates})
       }
-   })
-
-   function recieveGroupUserData(userId) {
-      firebase.database().ref('users/' + userId + '/userData/public').once('value').then(function(snapshot) { 
-
-      })
-   }
+    })
+    function updateMember(memberId, memberCoordinates) {
+      var groupLength = self.groupLocations.length
+      if (groupLength > 0) {
+        for (var i = 0; i < groupLength; i++) {
+          if (self.groupLocations[i].name === memberId) {
+            self.groupLocations[i].location = memberCoordinates
+            return true
+          }
+        }
+        return false
+      } else {
+        return false
+      }
+    }
   }
 }
 
@@ -101,18 +108,11 @@ export default {
       mapZoom: 8,
       mapCentre: [0, 0],
       mapRotation: 0,
-      groupLocations: [
-        { name: 'Jean', location: ['5.48', '51.43']}, 
-        { name: 'Laurie', location: ['5.58', '50.43']}, 
-        { name: 'Taisei', location: ['6.48', '52.43']}, 
-        { name: 'Louis', location: ['5.48', '51.73']}, 
-        { name: 'Bonnaire', location: ['5.90', '51.43']}
-      ]
+      groupLocations: []
     }
   },
   mounted () {
     if (this.user.data.groupData.current_group !== '') {
-
       this.recieveGroupData(this.user.data.groupData.current_group)
     } else {
       this.partOfGroup = false
