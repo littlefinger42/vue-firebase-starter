@@ -20,7 +20,7 @@
           </template>
         </vl-geoloc>
 
-          <vl-feature v-for="groupMember in groupLocations">
+          <vl-feature v-for="groupMember in groupLocations" :key="groupMember.name">
             <vl-geom-point :coordinates="groupMember.location"></vl-geom-point>
           </vl-feature>
 
@@ -45,11 +45,12 @@ const methods = {
     this.writePositionData(coordinate)
   },
   writePositionData (coordinate) {
-    if (this.user) {
+    if (this.user && this.user.data.groupData.current_group) {
       const userId = this.user.uid
-      console.log('userid from map page', userId)
+      const groupId = this.user.data.groupData.current_group
       const time = Date.now();
-      firebase.database().ref('users/' + userId + '/location/').update({ [time]: {coordinates: coordinate}}).then(function() {
+
+      firebase.database().ref('locations/' + groupId + '/' + userId).set({coordinates: coordinate, time: [time]}).then(function() {
         console.log('Written coordinate data to database: ', coordinate, time)
       })
     } else {
@@ -63,35 +64,30 @@ const methods = {
     })
   },
   recieveGroupData (currentGroup) {
-    this.groupLocations = []
-
     let self = this
-    // Make call to cloud function which returns array of group position data
-    var xhr = new XMLHttpRequest()
-    var endpoint = 'https://us-central1-testmap-49b0a.cloudfunctions.net/grouplocation'
-    xhr.addEventListener('load', requestListener)
+    firebase.database().ref('locations/' + currentGroup).on("child_changed", function(snapshot) {
+      var response = snapshot.val()
+      var memberId = snapshot.key
+      var memberCoordinates = response.coordinates
+      const groupLocations = self.groupLocations
+      console.log('Recieved data: ' + memberId, memberCoordinates, 'Current Group Length: ' + groupLocations.length)
 
-    xhr.open('GET', endpoint + '?groupId=' + currentGroup + '&userId=' + this.user.uid, true)
-    xhr.send()
-
-    function requestListener() {
-      const groupData = JSON.parse(this.response)
-
-      for (var i=0; i < groupData.length; i++) {
-        const memberData = groupData[i]
-        let memberId
-        let memberLocation
-
-        for (var property in memberData) {
-          if (property === 'userId') {
-             memberId = memberData.userId
-          } else {
-             memberLocation = memberData[property].coordinates
+      if (!updateMember(memberId, memberCoordinates)) { // If member doesn't exist, create a new one
+        self.groupLocations.push({name: memberId, location: memberCoordinates})
+      }
+    })
+    function updateMember(memberId, memberCoordinates) {
+      var groupLength = self.groupLocations.length
+      if (groupLength > 0) {
+        for (var i = 0; i < groupLength; i++) {
+          if (self.groupLocations[i].name === memberId) {
+            self.groupLocations[i].location = memberCoordinates
+            return true
           }
-
         }
-        self.groupLocations.push({name: memberId,location: memberLocation})
-        console.log('groupLocations ', self.groupLocations)
+        return false
+      } else {
+        return false
       }
     }
   }
@@ -112,14 +108,8 @@ export default {
       mapZoom: 8,
       mapCentre: [0, 0],
       mapRotation: 0,
-      tracking: this.user.data.userData.tracking,
-      groupLocations: [
-        { name: 'Jean', location: ['5.48', '51.43']}, 
-        { name: 'Laurie', location: ['5.58', '50.43']}, 
-        { name: 'Taisei', location: ['6.48', '52.43']}, 
-        { name: 'Louis', location: ['5.48', '51.73']}, 
-        { name: 'Bonnaire', location: ['5.90', '51.43']}
-      ]
+      tracking: true,
+      groupLocations: []
     }
   },
   mounted () {
