@@ -1,72 +1,74 @@
 <template>
+<v-container fluid fill-height>
 <v-layout row wrap>
-  <v-flex xs12>
-      <h1 class="title">{{ msg }}</h1>
-  </v-flex>
+    <v-flex xs12>
+        <h1 class="title">{{ msg }}</h1>
+    </v-flex>
 
-  <v-flex xs12>
-    <v-card class="mx-1">
-      <v-card-title primary class="title">User Settings</v-card-title>
-      <v-alert v-if="userSettingsStatus === 'success'"color="success" icon="check_circle" value="true">
-        {{userSettingsStatusText}}
-      </v-alert>
-      <v-card-text>
-        Here you can control settings specific to your user account.
-      </v-card-text>
-      <v-card-actions>
-        <v-text-field name="Map Icon Colour (#HEX)" label="Map Icon Colour (#HEX)" id="mapIconColour" v-model="mapIconColour"></v-text-field>
-        <v-btn flat color="primary" id="mapIconColourBtn" v-on:click="setMapIconColour(mapIconColour, '#fff')">Set</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-flex>
+    <v-flex xs12>
+      <v-card class="mx-1">
+        <v-card-title primary class="title">User Settings</v-card-title>
+        <v-alert v-if="userSettingsStatus === 'success'"color="success" icon="check_circle" value="true">
+          {{userSettingsStatusText}}
+        </v-alert>
+        <v-card-text>
+          Here you can control settings specific to your user account.
+        </v-card-text>
+        <v-card-actions>
+          <v-text-field name="Map Icon Colour (#HEX)" label="Map Icon Colour (#HEX)" id="mapIconColour" v-model="mapIconColour"></v-text-field>
+          <v-btn flat color="primary" id="mapIconColourBtn" v-on:click="setMapIconColour(mapIconColour, '#fff')">Set</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-flex>
 
-  <v-flex xs12 sm6>
-    <v-card class="mx-1">
-      <v-card-title primary class="title">Created Group Settings</v-card-title>
-      <v-alert v-if="createGroupStatus === 'warning'" color="error" icon="warning" value="true">
-        {{createGroupStatusText}}
-      </v-alert>
-      <v-alert v-if="createGroupStatus === 'success'"color="success" icon="check_circle" value="true">
-        {{createGroupStatusText}}
-      </v-alert>
-      <v-card-text>
-        Created group: {{user.data.groupData.created_group}}
-      </v-card-text>
-      <v-card-text
-        v-text="createGroupText">
-      </v-card-text>
-      <v-card-actions>
-        <v-text-field name="Create Group Input" label="Group Name" id="createGroupInput" v-model="createGroupName"></v-text-field>
-        <v-btn flat color="primary" id="createGroupBtn" v-on:click="createGroup(createGroupName, 'test')">Create</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-flex>
+    <v-flex xs12 sm6>
+      <v-card class="mx-1">
+        <v-card-title primary class="title">Created Group Settings</v-card-title>
+        <v-alert v-if="createGroupStatus === 'warning'" color="error" icon="warning" value="true">
+          {{createGroupStatusText}}
+        </v-alert>
+        <v-alert v-if="createGroupStatus === 'success'"color="success" icon="check_circle" value="true">
+          {{createGroupStatusText}}
+        </v-alert>
+        <v-card-text>
+          Created group: {{user.data.groupData.created_group}}
+        </v-card-text>
+        <v-card-text
+          v-text="createGroupText">
+        </v-card-text>
+        <v-card-actions>
+          <v-text-field name="Create Group Input" label="Group Name" id="createGroupInput" v-model="createGroupName"></v-text-field>
+          <v-btn flat color="primary" id="createGroupBtn" v-on:click="createGroup(createGroupName, 'test')">Create</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-flex>
 
-  <v-flex xs12 sm6>
-    <v-card class="mx-1">
-      <v-card-title primary class="title">Join a group</v-card-title>
-      <v-alert v-if="joinGroupStatus === 'warning'" color="error" icon="warning" value="true">
-        {{joinGroupStatusText}}
-      </v-alert>
-      <v-alert v-if="joinGroupStatus === 'success'"color="success" icon="check_circle" value="true">
-        {{joinGroupStatusText}}
-      </v-alert>
-      <v-alert v-if="joinGroupStatus === 'info'"color="info" icon="info" value="true">
-        {{joinGroupStatusText}}
-      </v-alert>
-      <v-card-text>
-        Current group: {{user.data.groupData.current_group}}
-      </v-card-text>
-      <v-card-text
-        v-text="joinGroupText">
-      </v-card-text>
-      <v-card-actions>
-        <v-text-field name="Join Group Input" label="Group Name" id="joinGroupInput" v-model="joinGroupName"></v-text-field>
-        <v-btn flat color="primary" id="joinGroupBtn" v-on:click="joinGroup(joinGroupName, 'test')">Join</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-flex>
+    <v-flex xs12 sm6>
+      <v-card class="mx-1">
+        <v-card-title primary class="title">Join a group</v-card-title>
+        <v-alert v-if="joinGroupStatus === 'warning'" color="error" icon="warning" value="true">
+          {{joinGroupStatusText}}
+        </v-alert>
+        <v-alert v-if="joinGroupStatus === 'success'"color="success" icon="check_circle" value="true">
+          {{joinGroupStatusText}}
+        </v-alert>
+        <v-alert v-if="joinGroupStatus === 'info'"color="info" icon="info" value="true">
+          {{joinGroupStatusText}}
+        </v-alert>
+        <v-card-text>
+          Current group: {{user.data.groupData.current_group}}
+        </v-card-text>
+        <v-card-text
+          v-text="joinGroupText">
+        </v-card-text>
+        <v-card-actions>
+          <v-text-field name="Join Group Input" label="Group Name" id="joinGroupInput" v-model="joinGroupName"></v-text-field>
+          <v-btn flat color="primary" id="joinGroupBtn" v-on:click="joinGroup(joinGroupName, 'test')">Join</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-flex>
 </v-layout>
+</v-container>
 </template>
 
 <script>

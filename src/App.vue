@@ -24,7 +24,7 @@
           <v-list-tile-content><v-list-tile-title>Profile</v-list-tile-title></v-list-tile-content>
         </v-list-tile>
         <v-list-tile @click="" v-show="user" to="logout">
-          <v-list-tile-action><v-icon>time_to_leave</v-icon></v-list-tile-action>
+          <v-list-tile-action><v-icon>exit_to_app</v-icon></v-list-tile-action>
           <v-list-tile-content><v-list-tile-title>Logout</v-list-tile-title></v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -36,9 +36,7 @@
     </v-toolbar>
 
     <v-content>
-      <v-container fluid fill-height>
-          <router-view></router-view>
-      </v-container>
+      <router-view></router-view>
     </v-content>
     
     <v-footer color="indigo" app>

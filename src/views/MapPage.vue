@@ -1,14 +1,20 @@
 <template>
   <v-layout row wrap>
+    <v-container fluid fill-height>
 
-    <h1 class="title">{{ msg }}</h1>
 
-    <v-flex xs12>
-      <v-alert v-if="partOfGroup === false"color="warning" icon="check_circle" value="true">
-        <p>
-          You're not part of a group yet. Go to <a href="/settings">settings</a>. <!-- TODO: Fix this link -->
-        </p>
-      </v-alert>
+      <v-flex xs12>
+        <h1 class="title">{{ msg }}</h1>
+        <v-alert v-if="partOfGroup === false"color="warning" icon="check_circle" value="true">
+          <p>
+            You're not part of a group yet. Go to <a href="/settings">settings</a>. <!-- TODO: Fix this link -->
+          </p>
+        </v-alert>
+      </v-flex>
+
+    </v-container>
+      <v-flex xs12>
+
       <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true">
         <vl-view :zoom="mapZoom" :center="mapCentre" :rotation="mapRotation"></vl-view>
 
@@ -28,9 +34,7 @@
           <vl-source-osm></vl-source-osm>
         </vl-layer-tile>
       </vl-map>
-
-    </v-flex>
-
+      </v-flex>
   </v-layout>
 </template>
 <script>
@@ -48,7 +52,7 @@ const methods = {
     if (this.user && this.user.data.groupData.current_group) {
       const userId = this.user.uid
       const groupId = this.user.data.groupData.current_group
-      const time = Date.now();
+      const time = Date.now()
 
       firebase.database().ref('locations/' + groupId + '/' + userId).set({coordinates: coordinate, time: [time]}).then(function() {
         console.log('Written coordinate data to database: ', coordinate, time)
@@ -65,6 +69,7 @@ const methods = {
   },
   recieveGroupData (currentGroup) {
     let self = this
+
     firebase.database().ref('locations/' + currentGroup).on("child_changed", function(snapshot) {
       var response = snapshot.val()
       var memberId = snapshot.key
@@ -76,6 +81,7 @@ const methods = {
         self.groupLocations.push({name: memberId, location: memberCoordinates})
       }
     })
+
     function updateMember(memberId, memberCoordinates) {
       var groupLength = self.groupLocations.length
       if (groupLength > 0) {
