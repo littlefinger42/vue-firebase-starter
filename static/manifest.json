@@ -1,5 +1,6 @@
 {
-    "name": "",
+    "name": "MapApp",
+    "short_name": "MapApp",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
