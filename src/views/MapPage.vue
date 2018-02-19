@@ -26,7 +26,7 @@
           </template>
         </vl-geoloc>
 
-          <vl-feature v-for="groupMember in groupLocations" :key="groupMember.name">
+          <vl-feature v-for="groupMember in groupData.members" :key="groupMember.name">
             <vl-geom-point :coordinates="groupMember.location"></vl-geom-point>
           </vl-feature>
 
@@ -76,30 +76,10 @@ const methods = {
         var response = snapshot.val()
         var memberId = snapshot.key
         var memberCoordinates = response.coordinates
-        const groupLocations = self.groupLocations
         console.log('Recieved data: ' + memberId, memberCoordinates)
-  
-        if (!updateMember(memberId, memberCoordinates)) { // If member doesn't exist, create a new one
-          self.groupLocations.push({name: memberId, location: memberCoordinates})
-        }
+        self.groupData.members[memberId].location = memberCoordinates
       })
-  
-      function updateMember(memberId, memberCoordinates) {
-        var groupLength = self.groupLocations.length
-        if (groupLength > 0) {
-          for (var i = 0; i < groupLength; i++) {
-            if (self.groupLocations[i].name === memberId) {
-              self.groupLocations[i].location = memberCoordinates
-              return true
-            }
-          }
-          return false
-        } else {
-          return false
-        }
-      }
     }
-
   }
 }
 
@@ -119,7 +99,6 @@ export default {
       mapCentre: [0, 0],
       mapRotation: 0,
       tracking: true,
-      groupLocations: [],
       groupData: {}
     }
   },
