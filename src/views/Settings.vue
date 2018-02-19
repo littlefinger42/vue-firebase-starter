@@ -104,15 +104,30 @@ export default {
   methods: {
     setMapIconColour: function(mapIconColour) {
       let self = this;
+      const groupId = this.user.data.groupData.current_group
       let user = this.user
       const userUid = user.uid
-
-      firebase.database().ref('users/' + userUid + '/user/userData/').update({
+      let promises = []
+      
+      if (groupId) {
+        let writeGroupUserColour = firebase.database().ref('groups/' + groupId + '/members/' + userUid).update({
+          "map_icon_colour": mapIconColour
+        })
+        promises.push(writeGroupUserColour)
+      }
+      
+      let writeUserColour = firebase.database().ref('users/' + userUid + '/user/userData/').update({
         "map_icon_colour": mapIconColour
       }).then(function() {
           self.userSettingsStatus = 'success'
           self.userSettingsStatusText = 'Map icon colour set to ' + mapIconColour
       })
+      promises.push(writeUserColour)
+
+      Promise.all(promises).then(function() {
+        console.log('Set map icon colour: ' + mapIconColour)
+      })
+
     },
     createGroup: function(groupId) {
       let self = this;

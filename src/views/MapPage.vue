@@ -61,41 +61,45 @@ const methods = {
       console.log('No user data')
     }
   },
-  recievePositionData (theirUserId) {
-    firebase.database().ref('users/' + theirUserId + '/location/').limitToLast(1).on('value', function(snapshot) {
-      const recievedPositionData = snapshot.val()
-      console.log(recievedPositionData)
-    })
-  },
   recieveGroupData (currentGroup) {
     let self = this
 
-    firebase.database().ref('locations/' + currentGroup).on("child_changed", function(snapshot) {
-      var response = snapshot.val()
-      var memberId = snapshot.key
-      var memberCoordinates = response.coordinates
-      const groupLocations = self.groupLocations
-      console.log('Recieved data: ' + memberId, memberCoordinates, 'Current Group Length: ' + groupLocations.length)
-
-      if (!updateMember(memberId, memberCoordinates)) { // If member doesn't exist, create a new one
-        self.groupLocations.push({name: memberId, location: memberCoordinates})
-      }
+    firebase.database().ref('groups/' + currentGroup).once('value').then(function(snapshot) { 
+      const groupData = snapshot.val()
+      console.log(groupData)
+      self.groupData = groupData
+      getLocations()
     })
 
-    function updateMember(memberId, memberCoordinates) {
-      var groupLength = self.groupLocations.length
-      if (groupLength > 0) {
-        for (var i = 0; i < groupLength; i++) {
-          if (self.groupLocations[i].name === memberId) {
-            self.groupLocations[i].location = memberCoordinates
-            return true
-          }
+    function getLocations() {
+      firebase.database().ref('locations/' + currentGroup).on("child_changed", function(snapshot) {
+        var response = snapshot.val()
+        var memberId = snapshot.key
+        var memberCoordinates = response.coordinates
+        const groupLocations = self.groupLocations
+        console.log('Recieved data: ' + memberId, memberCoordinates)
+  
+        if (!updateMember(memberId, memberCoordinates)) { // If member doesn't exist, create a new one
+          self.groupLocations.push({name: memberId, location: memberCoordinates})
         }
-        return false
-      } else {
-        return false
+      })
+  
+      function updateMember(memberId, memberCoordinates) {
+        var groupLength = self.groupLocations.length
+        if (groupLength > 0) {
+          for (var i = 0; i < groupLength; i++) {
+            if (self.groupLocations[i].name === memberId) {
+              self.groupLocations[i].location = memberCoordinates
+              return true
+            }
+          }
+          return false
+        } else {
+          return false
+        }
       }
     }
+
   }
 }
 
@@ -115,7 +119,8 @@ export default {
       mapCentre: [0, 0],
       mapRotation: 0,
       tracking: true,
-      groupLocations: []
+      groupLocations: [],
+      groupData: {}
     }
   },
   mounted () {
