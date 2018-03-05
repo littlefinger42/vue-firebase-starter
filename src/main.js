@@ -23,6 +23,10 @@ Vue.use(Vuetify)
 // firebase
 import './initFirebase'
 
+// openlayers
+import ol from 'ol'
+Object.defineProperty(Vue.prototype, '$ol', { value: ol });
+
 Vue.config.productionTip = false
 
 // Sync the router with the vuex store. This registers `store.state.route`
