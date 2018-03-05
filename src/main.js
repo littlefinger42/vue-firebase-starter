@@ -23,16 +23,6 @@ Vue.use(Vuetify)
 // firebase
 import './initFirebase'
 
-// vuelayers
-import {Map, Feature, PointGeom, OsmSource, Geoloc, TileLayer} from 'vuelayers'
-import 'vuelayers/lib/style.css'
-Vue.use(Map)
-Vue.use(Feature)
-Vue.use(PointGeom)
-Vue.use(OsmSource)
-Vue.use(TileLayer)
-Vue.use(Geoloc)
-
 Vue.config.productionTip = false
 
 // Sync the router with the vuex store. This registers `store.state.route`

@@ -15,7 +15,7 @@
     </v-container>
       <v-flex xs12>
 
-      <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true">
+      <!-- <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true">
         <vl-view :zoom="mapZoom" :center="mapCentre" :rotation="mapRotation"></vl-view>
 
         <vl-geoloc @update:position="onUpdatePosition" v-if="tracking">
@@ -33,7 +33,7 @@
         <vl-layer-tile id="osm">
           <vl-source-osm></vl-source-osm>
         </vl-layer-tile>
-      </vl-map>
+      </vl-map> -->
       </v-flex>
   </v-layout>
 </template>
@@ -124,7 +124,7 @@ export default {
     }
   },
   mounted () {
-    if (this.user.data.groupData.current_group !== '') {
+    if (this.user && this.user.data.groupData.current_group !== '') {
       this.recieveGroupData(this.user.data.groupData.current_group)
     } else {
       this.partOfGroup = false
