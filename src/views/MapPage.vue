@@ -21,14 +21,19 @@
         <vl-geoloc @update:position="onUpdatePosition" v-if="tracking">
           <template scope="geoloc">
             <vl-feature v-if="geoloc.position" id="geoloc-feature">
-              <vl-geom-point :coordinates="geoloc.position"></vl-geom-point>
+              <template slot-scope="feature">
+                <vl-geom-point class="hello" :coordinates="geoloc.position"></vl-geom-point>
+                <vl-style-box>
+                  <vl-style-line></vl-style-line>
+                </vl-style-box>
+              </template>
             </vl-feature>
           </template>
         </vl-geoloc>
 
-          <vl-feature v-for="groupMember in groupLocations" :key="groupMember.name">
+          <!-- <vl-feature v-for="groupMember in groupLocations" :key="groupMember.name">
             <vl-geom-point :coordinates="groupMember.location"></vl-geom-point>
-          </vl-feature>
+          </vl-feature> -->
 
         <vl-layer-tile id="osm">
           <vl-source-osm></vl-source-osm>
@@ -41,6 +46,7 @@
 import { mapState } from 'vuex'
 import firebase from 'firebase'
 import { db } from '../initFirebase'
+import { vlCore, Feature } from 'vuelayers'
 
 const methods = {
   onUpdatePosition (coordinate) {
@@ -133,7 +139,6 @@ export default {
 }
 </script>
 <style lang="sass">
-.map 
-  height: auto;
-  width: 100%;
+.vl-map 
+  border: 1px solid red;
 </style>

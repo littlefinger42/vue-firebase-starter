@@ -24,7 +24,7 @@ Vue.use(Vuetify)
 import './initFirebase'
 
 // vuelayers
-import {Map, Feature, PointGeom, OsmSource, Geoloc, TileLayer} from 'vuelayers'
+import {Map, Feature, PointGeom, OsmSource, Geoloc, TileLayer, StyleBox, StrokeStyle} from 'vuelayers'
 import 'vuelayers/lib/style.css'
 Vue.use(Map)
 Vue.use(Feature)
@@ -32,6 +32,8 @@ Vue.use(PointGeom)
 Vue.use(OsmSource)
 Vue.use(TileLayer)
 Vue.use(Geoloc)
+Vue.use(StyleBox)
+Vue.use(StrokeStyle)
 
 Vue.config.productionTip = false
 
