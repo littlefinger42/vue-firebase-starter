@@ -74,11 +74,10 @@ const methods = {
   },
   recieveGroupData (currentGroup) {
     let self = this
-    const time = Date.now()
 
     firebase.database().ref('groups/' + currentGroup).on('value', function(snapshot) { 
       const groupData = snapshot.val()
-      console.log(time + ' Group Data', groupData)
+      console.log('Group Data', groupData)
       self.groupData = groupData
       getLocations()
     })
