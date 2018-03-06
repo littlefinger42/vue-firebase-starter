@@ -31,18 +31,18 @@
           </template>
         </vl-geoloc>
 
-          <vl-feature v-for="groupMember in groupLocations" :key="groupMember.name">
-            <vl-geom-point :coordinates="groupMember.location"></vl-geom-point>
-              <vl-style-box>
-                <vl-style-circle>
-                  <vl-style-stroke :color="groupData.members[groupMember.name].map_icon_colour"></vl-style-stroke>
-                </vl-style-circle>
-              </vl-style-box>
-          </vl-feature>
+        <vl-feature v-for="groupMember in groupLocations" :key="groupMember.name">
+          <vl-geom-point :coordinates="groupMember.location"></vl-geom-point>
+            <vl-style-box>
+              <vl-style-circle>
+                <vl-style-stroke :color="groupData.members[groupMember.name].map_icon_colour"></vl-style-stroke>
+              </vl-style-circle>
+            </vl-style-box>
+        </vl-feature>
 
-        <vl-layer-tile id="osm">
-          <vl-source-osm></vl-source-osm>
-        </vl-layer-tile>
+        <vl-layer-image>
+          <vl-source-image-static :url="backgroundSrc" :size="backgroundSize" :extent="backgroundExtent"></vl-source-image-static>
+        </vl-layer-image>
       </vl-map>
       </v-flex>
   </v-layout>
@@ -131,7 +131,12 @@ export default {
       mapRotation: 0,
       tracking: true,
       groupLocations: [],
-      groupData: {}
+      groupData: {},
+      backgroundSrc: require('../assets/logo.png'),
+      backgroundX: 1024 * 10000,
+      backgroundY: 968 * 10000,
+      backgroundExtent: [-20000,-20000, 20000, 20000],
+      backgroundSize: [1024, 968],
     }
   },
   mounted () {
