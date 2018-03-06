@@ -12,7 +12,8 @@
           {{userSettingsStatusText}}
         </v-alert>
         <v-card-text>
-          Here you can control settings specific to your user account.
+          Here you can control settings specific to your user account. 
+          Your current colour is: <span v-bind:style="{color: user.data.userData.map_icon_colour}" v-text="user.data.userData.map_icon_colour"></span>
         </v-card-text>
         <v-card-actions>
           <v-text-field name="Map Icon Colour (#HEX)" label="Map Icon Colour (#HEX)" id="mapIconColour" v-model="mapIconColour"></v-text-field>
