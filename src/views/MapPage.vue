@@ -21,19 +21,24 @@
         <vl-geoloc @update:position="onUpdatePosition" v-if="tracking">
           <template scope="geoloc">
             <vl-feature v-if="geoloc.position" id="geoloc-feature">
-              <template slot-scope="feature">
-                <vl-geom-point class="hello" :coordinates="geoloc.position"></vl-geom-point>
-                <vl-style-box>
-                  <vl-style-line></vl-style-line>
-                </vl-style-box>
-              </template>
+              <vl-geom-point class="hello" :coordinates="geoloc.position"></vl-geom-point>
+              <vl-style-box>
+                <vl-style-circle>
+                  <vl-style-stroke :color="user.data.userData.map_icon_colour"></vl-style-stroke>
+                </vl-style-circle>
+              </vl-style-box>
             </vl-feature>
           </template>
         </vl-geoloc>
 
-          <!-- <vl-feature v-for="groupMember in groupLocations" :key="groupMember.name">
+          <vl-feature v-for="groupMember in groupLocations" :key="groupMember.name">
             <vl-geom-point :coordinates="groupMember.location"></vl-geom-point>
-          </vl-feature> -->
+              <vl-style-box>
+                <vl-style-circle>
+                  <vl-style-stroke :color="groupData.members[groupMember.name].map_icon_colour"></vl-style-stroke>
+                </vl-style-circle>
+              </vl-style-box>
+          </vl-feature>
 
         <vl-layer-tile id="osm">
           <vl-source-osm></vl-source-osm>
@@ -69,10 +74,11 @@ const methods = {
   },
   recieveGroupData (currentGroup) {
     let self = this
+    const time = Date.now()
 
-    firebase.database().ref('groups/' + currentGroup).once('value').then(function(snapshot) { 
+    firebase.database().ref('groups/' + currentGroup).on('value', function(snapshot) { 
       const groupData = snapshot.val()
-      console.log(groupData)
+      console.log(time + ' Group Data', groupData)
       self.groupData = groupData
       getLocations()
     })
@@ -83,7 +89,7 @@ const methods = {
         var memberId = snapshot.key
         var memberCoordinates = response.coordinates
         const groupLocations = self.groupLocations
-        console.log('Recieved data: ' + memberId, memberCoordinates)
+        console.log('Recieved group-user data: ' + memberId, memberCoordinates)
   
         if (!updateMember(memberId, memberCoordinates)) { // If member doesn't exist, create a new one
           self.groupLocations.push({name: memberId, location: memberCoordinates})
@@ -106,7 +112,7 @@ const methods = {
       }
     }
 
-  }
+}
 }
 
 
@@ -130,7 +136,7 @@ export default {
     }
   },
   mounted () {
-    if (this.user.data.groupData.current_group !== '') {
+    if (this.user && this.user.data.groupData.current_group !== '') {
       this.recieveGroupData(this.user.data.groupData.current_group)
     } else {
       this.partOfGroup = false

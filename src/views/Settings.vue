@@ -125,6 +125,8 @@ export default {
       promises.push(writeUserColour)
 
       Promise.all(promises).then(function() {
+        user.data.userData.map_icon_colour = mapIconColour
+        store.commit('UPDATE_USER', user)
         console.log('Set map icon colour: ' + mapIconColour)
       })
 
