@@ -132,11 +132,11 @@ export default {
       tracking: true,
       groupLocations: [],
       groupData: {},
-      backgroundSrc: require('../assets/logo.png'),
-      backgroundX: 1024 * 10000,
-      backgroundY: 968 * 10000,
-      backgroundExtent: [-20000,-20000, 20000, 20000],
-      backgroundSize: [1024, 968],
+      backgroundSrc: require('../assets/map.jpg'),
+      backgroundX: 2793 * 10000,
+      backgroundY: 2161 * 10000,
+      backgroundExtent: [-(2793 * 400),-(2161 * 400), 2793 * 400, 2161 * 400],
+      backgroundSize: [2793, 2161],
     }
   },
   mounted () {
