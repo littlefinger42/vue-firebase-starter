@@ -2,7 +2,6 @@
   <v-layout column wrap fill-height>
     <div id="mapOverlay">
       <div id="header">
-        <h1 class="title">{{ msg }}</h1>
       </div>
       <div class="groupAlert">
         <v-alert v-if="partOfGroup === false"color="warning" icon="check_circle" value="true">
@@ -44,7 +43,7 @@
           <vl-source-image-static :url="backgroundSrc" :size="backgroundSize" :extent="backgroundExtent"></vl-source-image-static>
         </vl-layer-image>
       </vl-map>
-      
+
     </v-flex>
  </v-layout>
 </template>
@@ -121,7 +120,6 @@ export default {
   },
   data () {
     return {
-      msg: 'Map Page',
       deviceCoordinate: undefined,
       partOfGroup: true,
       mapZoom: 8,
