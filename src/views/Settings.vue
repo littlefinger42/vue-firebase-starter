@@ -74,7 +74,7 @@
 
 <script>
 import firebase from 'firebase'
-import { db } from '../initFirebase'
+// import { db } from '../initFirebase'
 import { mapState } from 'vuex'
 import store from '../store'
 
@@ -96,48 +96,46 @@ export default {
       userSettingsStatusText: undefined
     }
   },
-  mounted() {
-    var database = firebase.database()
+  mounted () {
   },
   computed: {
-    ...mapState(['user']),
+    ...mapState(['user'])
   },
   methods: {
-    setMapIconColour: function(mapIconColour) {
-      let self = this;
+    setMapIconColour: function (mapIconColour) {
+      let self = this
       const groupId = this.user.data.groupData.current_group
       let user = this.user
       const userUid = user.uid
       let promises = []
-      
+
       if (groupId) {
         let writeGroupUserColour = firebase.database().ref('groups/' + groupId + '/members/' + userUid).update({
-          "map_icon_colour": mapIconColour
+          'map_icon_colour': mapIconColour
         })
         promises.push(writeGroupUserColour)
       }
-      
+
       let writeUserColour = firebase.database().ref('users/' + userUid + '/user/userData/').update({
-        "map_icon_colour": mapIconColour
-      }).then(function() {
-          self.userSettingsStatus = 'success'
-          self.userSettingsStatusText = 'Map icon colour set to ' + mapIconColour
+        'map_icon_colour': mapIconColour
+      }).then(function () {
+        self.userSettingsStatus = 'success'
+        self.userSettingsStatusText = 'Map icon colour set to ' + mapIconColour
       })
       promises.push(writeUserColour)
 
-      Promise.all(promises).then(function() {
+      Promise.all(promises).then(function () {
         user.data.userData.map_icon_colour = mapIconColour
         store.commit('UPDATE_USER', user)
         console.log('Set map icon colour: ' + mapIconColour)
       })
-
     },
-    createGroup: function(groupId) {
-      let self = this;
+    createGroup: function (groupId) {
+      let self = this
       let user = this.user
       const userUid = user.uid
 
-      firebase.database().ref('groups/' + groupId).once('value').then(function(snapshot) {
+      firebase.database().ref('groups/' + groupId).once('value').then(function (snapshot) {
         if (snapshot.val() !== null) {
           self.createGroupStatus = 'warning'
           self.createGroupStatusText = 'A group with the same name already exists.'
@@ -146,27 +144,26 @@ export default {
         }
       })
 
-    function doCreateGroup() {
-      firebase.database().ref('users/' + userUid + '/user/groupData/').set({
-        created_group: groupId,
-        current_group: groupId
-      }).then(function(){
-        self.createGroupStatus = 'success'
-        self.createGroupStatusText = 'Group Created'
-        user.data.groupData.created_group = groupId
-        user.data.groupData.current_group = groupId
-        store.commit('UPDATE_USER_GROUP', user.data.groupData)
-      })
-    }
-
+      function doCreateGroup () {
+        firebase.database().ref('users/' + userUid + '/user/groupData/').set({
+          created_group: groupId,
+          current_group: groupId
+        }).then(function () {
+          self.createGroupStatus = 'success'
+          self.createGroupStatusText = 'Group Created'
+          user.data.groupData.created_group = groupId
+          user.data.groupData.current_group = groupId
+          store.commit('UPDATE_USER_GROUP', user.data.groupData)
+        })
+      }
     },
-    joinGroup: function(groupId) {
-      let self = this;
+    joinGroup: function (groupId) {
+      let self = this
       const user = this.user
       const userUid = user.uid
 
       if (groupId !== user.data.groupData.current_group) {
-        firebase.database().ref('groups/' + groupId).once('value').then(function(snapshot) {
+        firebase.database().ref('groups/' + groupId).once('value').then(function (snapshot) {
           if (snapshot.val() === null) {
             self.joinGroupStatus = 'warning'
             self.joinGroupStatusText = 'This group doesnt exist.'
@@ -178,11 +175,11 @@ export default {
         self.joinGroupStatus = 'info'
         self.joinGroupStatusText = 'You are already a member of this group'
       }
-      
-      function doJoinGroup() {
+
+      function doJoinGroup () {
         firebase.database().ref('users/' + userUid + '/user/groupData/').update({
           current_group: groupId
-        }).then(function() {
+        }).then(function () {
           self.joinGroupStatus = 'success'
           self.joinGroupStatusText = 'Group Joined'
           user.data.groupData.current_group = groupId

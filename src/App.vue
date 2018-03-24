@@ -67,14 +67,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
-#app
-</style>
 <style scoped>
-.content {
-  width: 90%;
-  margin: 0 auto;
-}
 
 .body {
   background-color: white;

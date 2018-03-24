@@ -1,25 +1,25 @@
 <template>
-  <v-layout row wrap>
-    <v-container fluid fill-height>
-
-
-      <v-flex xs12>
+  <v-layout column wrap fill-height>
+    <div id="mapOverlay">
+      <div id="header">
         <h1 class="title">{{ msg }}</h1>
+      </div>
+      <div class="groupAlert">
         <v-alert v-if="partOfGroup === false"color="warning" icon="check_circle" value="true">
           <p>
             You're not part of a group yet. Go to <a href="/settings">settings</a>. <!-- TODO: Fix this link -->
           </p>
         </v-alert>
-      </v-flex>
-
-    </v-container>
-      <v-flex xs12>
+      </div>
+    </div>
+  
+    <v-flex xs12 fill-height>
 
       <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true">
         <vl-view :zoom="mapZoom" :center="mapCentre" :rotation="mapRotation"></vl-view>
 
         <vl-geoloc @update:position="onUpdatePosition" v-if="tracking">
-          <template scope="geoloc">
+          <template slot-scope="geoloc">
             <vl-feature v-if="geoloc.position" id="geoloc-feature">
               <vl-geom-point class="hello" :coordinates="geoloc.position"></vl-geom-point>
               <vl-style-box>
@@ -44,14 +44,15 @@
           <vl-source-image-static :url="backgroundSrc" :size="backgroundSize" :extent="backgroundExtent"></vl-source-image-static>
         </vl-layer-image>
       </vl-map>
-      </v-flex>
-  </v-layout>
+      
+    </v-flex>
+ </v-layout>
 </template>
 <script>
 import { mapState } from 'vuex'
 import firebase from 'firebase'
-import { db } from '../initFirebase'
-import { vlCore, Feature } from 'vuelayers'
+// import { db } from '../initFirebase'
+// import { vlCore, Feature } from 'vuelayers'
 
 const methods = {
   onUpdatePosition (coordinate) {
@@ -65,7 +66,7 @@ const methods = {
       const groupId = this.user.data.groupData.current_group
       const time = Date.now()
 
-      firebase.database().ref('locations/' + groupId + '/' + userId).set({coordinates: coordinate, time: [time]}).then(function() {
+      firebase.database().ref('locations/' + groupId + '/' + userId).set({coordinates: coordinate, time: [time]}).then(function () {
         console.log('Written coordinate data to database: ', coordinate, time)
       })
     } else {
@@ -75,27 +76,26 @@ const methods = {
   recieveGroupData (currentGroup) {
     let self = this
 
-    firebase.database().ref('groups/' + currentGroup).on('value', function(snapshot) { 
+    firebase.database().ref('groups/' + currentGroup).on('value', function (snapshot) {
       const groupData = snapshot.val()
       console.log('Group Data', groupData)
       self.groupData = groupData
       getLocations()
     })
 
-    function getLocations() {
-      firebase.database().ref('locations/' + currentGroup).on("child_changed", function(snapshot) {
+    function getLocations () {
+      firebase.database().ref('locations/' + currentGroup).on('child_changed', function (snapshot) {
         var response = snapshot.val()
         var memberId = snapshot.key
         var memberCoordinates = response.coordinates
-        const groupLocations = self.groupLocations
         console.log('Recieved group-user data: ' + memberId, memberCoordinates)
-  
+
         if (!updateMember(memberId, memberCoordinates)) { // If member doesn't exist, create a new one
           self.groupLocations.push({name: memberId, location: memberCoordinates})
         }
       })
-  
-      function updateMember(memberId, memberCoordinates) {
+
+      function updateMember (memberId, memberCoordinates) {
         var groupLength = self.groupLocations.length
         if (groupLength > 0) {
           for (var i = 0; i < groupLength; i++) {
@@ -110,16 +110,14 @@ const methods = {
         }
       }
     }
-
+  }
 }
-}
-
 
 export default {
   name: 'MapPage',
   methods,
   computed: {
-    ...mapState(['user']),
+    ...mapState(['user'])
   },
   data () {
     return {
@@ -135,8 +133,8 @@ export default {
       backgroundSrc: require('../assets/map.jpg'),
       backgroundX: 2793 * 10000,
       backgroundY: 2161 * 10000,
-      backgroundExtent: [-(2793 * 400),-(2161 * 400), 2793 * 400, 2161 * 400],
-      backgroundSize: [2793, 2161],
+      backgroundExtent: [-(2793 * 400), -(2161 * 400), 2793 * 400, 2161 * 400],
+      backgroundSize: [2793, 2161]
     }
   },
   mounted () {
@@ -148,7 +146,9 @@ export default {
   }
 }
 </script>
-<style lang="sass">
-.vl-map 
-  border: 1px solid red;
+<style>
+#mapOverlay {
+  position:absolute;
+  z-index:2;
+}
 </style>
